@@ -68,13 +68,16 @@ int main(int argc, char** argv){
   		std::cout << "Conexión desde Host: "<< host << " Puerto: "<< serv<<"\n";
   		std::cout<< "\tMensaje(" << bytes <<"): " << buffer << "\n";
 
-  		size_t siz = dameFecha(buffer[0], buffer);
-  		if(siz == 0){
-  			std::cout << "Saliendo...\n";
-  			freeaddrinfo(res);
-  			return 0;
-  		} else if(siz != 81)
-  			sendto(sd, buffer, siz, 0, (struct sockaddr *) &cliente, cliente_len);
+  		if(bytes > 2) std::cout << "Comando no soportado: " << buffer << "\n";
+  		else {
+	  		size_t siz = dameFecha(buffer[0], buffer);
+	  		if(siz == 0){
+	  			std::cout << "Saliendo...\n";
+	  			freeaddrinfo(res);
+	  			return 0;
+	  		} else if(siz != 81)
+	  			sendto(sd, buffer, siz, 0, (struct sockaddr *) &cliente, cliente_len);
+  		}
 	}
 
 
