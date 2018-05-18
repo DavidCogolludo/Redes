@@ -1,6 +1,7 @@
 #include "Serializable.h"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 
 #include <sys/types.h>
@@ -33,8 +34,6 @@ public:
         memcpy(tmp, &x, sizeof(int16_t));
         tmp += sizeof(int16_t);
         memcpy(tmp, &y, sizeof(int16_t));
-        tmp += sizeof(int16_t);
-
     }
 
     int from_bin(char * data)
@@ -70,16 +69,14 @@ int main(int argc, char **argv)
     std::cin >> y;
 
    Jugador one (name,x,y);
-   Jugador dos ("pepe", 20, 20);
-
-    int f;
-    creat("Jugador.txt",S_IRWXU | S_IRWXO);
-
 
     one.to_bin();
-    write(f, one.data(), one.size());
 
-    std::cout << "\n" << dos.from_bin(one.data());
+    int fd = open("Jugador.txt", O_CREAT|O_RDWR, 0660);
+
+    write(fd, one.data(), one.size());
+
+    close(fd);
 
 
 }
