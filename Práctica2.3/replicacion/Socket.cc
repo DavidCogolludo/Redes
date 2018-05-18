@@ -59,10 +59,10 @@ int Socket::send(Serializable * obj, Socket * sock)
 int Socket::recv(char * buffer, Socket ** sock)
 {
     int c = 0; int i = 0;
-    do {
-        c = recv(sock, &(buffer[i]), 1, 0);
-    } while ( c >= 0 && i < 256 && buffer[i++] != '\n');
-            
+    
+        c = recvfrom(sock, &(buffer[i]), 1, 0, addr, addrlen);
+    
+    *sock = new Socket(addr, addrlen)           
 }
 
 // ----------------------------------------------------------------------------

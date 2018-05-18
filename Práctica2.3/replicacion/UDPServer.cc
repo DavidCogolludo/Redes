@@ -45,9 +45,10 @@ void UDPServer::server_thread()
 { 	while(true){
 
 		char buffer [256];
-		socket.recv(buffer, socket); 
+		Socket * cliente;
 
-		Socket * cliente = new Socket();
+		socket.recv(buffer, &cliente); 
+
 		connections.push_back(cliente);
 	    
 	  		getnameinfo((struct sockaddr *) &cliente, cliente_len, host, NI_MAXHOST,
