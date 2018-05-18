@@ -28,6 +28,16 @@ std::ostream& operator<<(std::ostream& os, const Socket& s)
 
 Socket::Socket(const char * address, const char * port):sd(-1)
 {
+
+	struct addrinfo hints;
+	memset((void*) &hints,'\0', sizeof(struct addrinfo));
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+
+	getaddrinfo(address, port, &hints, &sa);
+    sd = socket(sa->ai_family, sa->ai_socktype, 0);
+
+    listen(sd, 5);
 }
 
 // ----------------------------------------------------------------------------
@@ -41,12 +51,18 @@ int Socket::bind()
 
 int Socket::send(Serializable * obj, Socket * sock)
 {
+    return send(sock, obj->data(), obj->size(), 0);
 }
 
 // ----------------------------------------------------------------------------
 
 int Socket::recv(char * buffer, Socket ** sock)
 {
+    int c = 0; int i = 0;
+    do {
+        c = recv(sock, &(buffer[i]), 1, 0);
+    } while ( c >= 0 && i < 256 && buffer[i++] != '\n');
+            
 }
 
 // ----------------------------------------------------------------------------
