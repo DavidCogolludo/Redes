@@ -14,7 +14,7 @@ public:
     {
     	strncpy(nick, n, 8);
 
-    	message = m;
+    	m.copy(message,80);
     };
 
     void to_bin()
@@ -31,7 +31,7 @@ public:
 
     virtual int from_bin(char * bobj)
     {
-    	char *tmp = data + sizeof(int32_t);
+    	char *tmp = bobj + sizeof(int32_t);
     	memcpy(nick, tmp, 8);
     	tmp+= 8;
     	memcpy(message, tmp, 80);
@@ -68,8 +68,10 @@ public:
 class ChatClient
 {
 public:
-    ChatClient(const char * s, const char * p, const char * n):socket(s, p),
-        nick(n){};
+    ChatClient(const char * s, const char * p, const char * n):socket(s, p)
+        {
+        		strncpy(nick, n, 8);
+        };
 
     void input_thread()
     {
