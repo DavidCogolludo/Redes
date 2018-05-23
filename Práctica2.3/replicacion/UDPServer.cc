@@ -29,14 +29,15 @@ int UDPServer::start()
 {
 	pthread_t tid[THREAD_POOL_SIZE];	
 	for(int i = 0; i < THREAD_POOL_SIZE; i++){
-		pthread_attr_t attr;
 
-		UDPServer* st = new UDPServer(socket);
+		pthread_attr_t attr;
 		pthread_attr_init (&attr);
 		pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
 		pthread_create(&tid[i], &attr, _server_thread, static_cast<void*>(st));
 	}
+
+	return 0;
 }
 
 // ----------------------------------------------------------------------------
@@ -50,7 +51,7 @@ void UDPServer::server_thread()
 		socket.recv(buffer, &cliente); 
 
 		connections.push_back(cliente);
-	    
+	    /*
 	  		getnameinfo((struct sockaddr *) &cliente, cliente_len, host, NI_MAXHOST,
 	    	  serv, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV);
 
@@ -62,7 +63,7 @@ void UDPServer::server_thread()
 	  		else {
 		  		size_t siz = dameFecha(buffer[0], buffer);
 		  		if(siz != 81)
-		  			sendto(sd, buffer, siz, 0, (struct sockaddr *) &cliente, cliente_len);
+		  			sendto(sd, buffer, siz, 0, (struct sockaddr *) &cliente, cliente_len);*/
 	}
 }
 
@@ -70,12 +71,36 @@ void UDPServer::server_thread()
 
 void UDPServer::add_connection (Socket * s)
 {
+	pthread_mutex_lock(&mutex);
+
+	int i = 0;
+	while(i < connections.size() && connections[i] != s){i++;}
+
+	if (i < connections.size())	delete s;
+	else{
+		if(connections.size() < THREAD_POOL_SIZE){
+			connections.push_back(s);
+		}
+	}
+
+	pthread_mutex_unlock(&mutex);
+
+	return;
 }
 
 // ----------------------------------------------------------------------------
 
 void UDPServer::del_connection (Socket * s)
 {
+	pthread_mutex_lock(&mutex);
+
+	int i = 0;
+	while(i < connections.size() && connections[i] != s){i++;}
+
+	//Found
+	if(i < connections.size())  connections.erase(connections.begin()+i);
+
+	pthread_mutex_unlock(&mutex);
 }
 
 // ----------------------------------------------------------------------------

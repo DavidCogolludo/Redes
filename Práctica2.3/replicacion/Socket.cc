@@ -38,7 +38,7 @@ Socket::Socket(const char * address, const char * port):sd(-1)
 	struct addrinfo hints;
 	memset((void*) &hints,'\0', sizeof(struct addrinfo));
 	hints.ai_family = AF_INET;
-	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_socktype = SOCK_DGRAM;
 
 	struct addrinfo* res;
 	int rc = getaddrinfo(address, port, &hints, &res);
