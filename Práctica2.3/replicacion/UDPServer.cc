@@ -34,7 +34,7 @@ int UDPServer::start()
 		pthread_attr_init (&attr);
 		pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
-		pthread_create(&tid[i], &attr, _server_thread, static_cast<void*>(st));
+		pthread_create(&tid[i], &attr, _server_thread, static_cast<void*>(this));
 	}
 
 	return 0;
@@ -51,6 +51,8 @@ void UDPServer::server_thread()
 		socket.recv(buffer, &cliente); 
 
 		connections.push_back(cliente);
+
+		do_message(buffer);
 	    /*
 	  		getnameinfo((struct sockaddr *) &cliente, cliente_len, host, NI_MAXHOST,
 	    	  serv, NI_MAXSERV, NI_NUMERICHOST|NI_NUMERICSERV);
