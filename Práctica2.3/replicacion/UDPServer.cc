@@ -4,6 +4,7 @@
 UDPServer::UDPServer(const char * serv, const char * port)
     :socket(serv, port)
 {
+	socket.bind();
     pthread_mutex_init(&mutex, 0);
 };
 

@@ -25,6 +25,8 @@ std::ostream& operator<<(std::ostream& os, const Socket& s)
     char host[NI_MAXHOST];
     char serv[NI_MAXSERV];
 
+    std::cout << "\n\n\n\nhohohohohohgo\n\n\n";
+
     getnameinfo((struct sockaddr *) &(s.sa), s.sa_len, host, NI_MAXHOST, serv,
                 NI_MAXSERV, NI_NUMERICHOST);
 
@@ -44,8 +46,13 @@ Socket::Socket(const char * address, const char * port):sd(-1)
 
 	struct addrinfo* res;
 	int rc = getaddrinfo(address, port, &hints, &res);
-	//sa = res->ai_addr;
+
+
+    char host[NI_MAXHOST];
+    char serv[NI_MAXSERV];
 	sa_len = res->ai_addrlen;
+	sa = *(res->ai_addr);
+
 
     sd = socket(res->ai_family, res->ai_socktype, 0);
 
@@ -75,6 +82,7 @@ int Socket::recv(char * buffer, Socket ** sock)
 	char host[NI_MAXHOST];
 	char serv [NI_MAXSERV];
 
+
 	struct sockaddr cliente;
 	socklen_t cliente_len = sizeof(struct sockaddr);
 
@@ -86,7 +94,6 @@ int Socket::recv(char * buffer, Socket ** sock)
 	}else {
 		int bytes =  recvfrom(sd, (void* )&buffer, MAX_MESSAGE_SIZE, 0, &cliente, &cliente_len);
 	}
-    
     return 0;
 }
 

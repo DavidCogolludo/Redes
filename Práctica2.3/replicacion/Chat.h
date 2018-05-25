@@ -10,11 +10,10 @@ class ChatMessage: public Serializable
 public:
     ChatMessage(){};
 
-    ChatMessage(const char * n, const std::string m)
+    ChatMessage(const char * n, const std::string& m)
     {
     	strncpy(nick, n, 8);
-
-    	m.copy(message,80);
+    	strncpy(message, m.c_str(), 6);
     };
 
     void to_bin()
@@ -75,7 +74,7 @@ public:
 
     void input_thread()
     {
-    	char c[80];
+    	std::string c;
     	ChatMessage* m;
     	while(1){
 

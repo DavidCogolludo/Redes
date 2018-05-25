@@ -25,7 +25,7 @@ public:
 
     // ------------------------------------------------------------------------
 
-    Serializable():_size(0), _data(0){};
+    Serializable():_size(0){};
 
     virtual ~Serializable()
     {
@@ -72,13 +72,18 @@ protected:
 
     int32_t _size;
 
-    char *  _data;
+    char  _data[100];
 
     /**
      *  Reserva memoria para el buffer del objeto serializado
      */
     void alloc_data(int32_t data_size)
     {
+    	_size = data_size + sizeof(int32_t);
+
+    	        *((int32_t *) _data) = data_size;
+    	return;
+/*
         if ( _data != 0 )
         {
             free(_data);
@@ -88,6 +93,7 @@ protected:
         _size = data_size + sizeof(int32_t);
 
         *((int32_t *) _data) = data_size;
+        */
     }
 };
 
